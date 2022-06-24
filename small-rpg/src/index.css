@@ -1,0 +1,143 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+* {
+  user-select: none;
+}
+
+.current-count {
+  position: fixed;
+  padding: 1em;
+  background-color: blueviolet;
+  color: #fff;
+  font-size: 2rem;
+}
+.notification {
+  position: fixed;
+  right: 20px;
+  width: 400px;
+  height: 300px;
+  overflow-y: scroll;
+  z-index: 2;
+}
+.notification span {
+  display: block;
+  background-color: cornflowerblue;
+  color: #fff;
+  margin-block: 1em;
+  padding: .5em 1em;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  margin-block: 2em;
+}
+.enemies, .player {
+  padding: .5em;
+  border: 1px solid;
+  color: white;
+}
+.semi-bosses, .minions {
+  padding-block: 1em;
+}
+.boss {
+  background-color: rgb(156, 41, 41);
+}
+.semi-boss {
+  background-color: rgb(228, 88, 88);
+}
+.minion {
+  background-color: coral;
+}
+.players {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.attacker {
+  background-color: darkmagenta;
+}
+.healer {
+  background-color: darkseagreen;
+}
+.hero {
+  background-color: darkslateblue;
+}
+.bg-big {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.571);
+  z-index: 2;
+  top: 0;
+}
+.modal {
+  position: fixed;
+  width: 50%;
+  background-color: white;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2em;
+  border-radius: 10px;
+}
+.choices {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border: 1px solid black;
+  overflow: hidden;
+}
+.what-num, .num, .select-btn {
+  position: absolute;
+  transition: all .5s ease-in-out;
+}
+.what-num, .num {
+  width: 150px;
+  height: 120px;
+  top: 0;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.what-num {
+  background-color: cornflowerblue;
+  color: white;
+}
+.num {
+  right: -100%;
+}
+.select-btn {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.relative {
+  position: relative;
+}
+.level-complete {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.585);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

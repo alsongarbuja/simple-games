@@ -1,5 +1,5 @@
 import './App.css';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function App() {
   const [enemies, setEnemies] = useState({
@@ -12,7 +12,7 @@ function App() {
   })
   const [players, setPlayers] = useState({
     attacker: 10,
-    healer: 40,
+    healer: 50,
     hero: 20,
   })
   const [move, setMove] = useState({
@@ -21,7 +21,7 @@ function App() {
   })
   const [notification, setNotification] = useState([])
   const [chance, setChance] = useState(false)
-  const [chanceCards, setChanceCards] = useState([30, 20, -10])
+  const [chanceCards, setChanceCards] = useState([10, 20, -10])
   const [reveal, setReveal] = useState(false)
   const [currentMoveCount, setCurrentMoveCount] = useState(1)
   const [isPlayersTurn, setIsPlayersTurn] = useState(true)
@@ -45,35 +45,16 @@ function App() {
       attacker: prev.attacker-currentAttacker,
       hero: prev.hero-currentHero,
     }))
-    if(totalAttack>=enemies[enemy]){
-      setKilled(prev => [...prev, getIndex(enemy)])
-      setNotification(prev => [...prev, `Players got chance move by killing a enemie`])
-      setChance(true)
-      setChanceCards(shuffle(chanceCards))
-    }
+
     setEnemies(prev => ({...prev, [enemy]: prev[enemy]-totalAttack}))
     setNotification(prev => [...prev, `Player attacked ${enemy} with ${totalAttack} points`])
     setMove({ attacker: 0, hero: 0 })
-
-    if(killed.length+1===3){
-      setNotification(prev => [...prev, `Level 1 completed`])
-      setLevel(1)
-      setPlayers(prev => ({
-        ...prev,
-        attacker: prev.attacker+5,
-        hero: prev.healer+5,
-        healer: prev.hero+10,
-      }))
-    }
-    if(killed.length+1===5){
-      setNotification(prev => [...prev, `Level 2 completed`])
-      setLevel(2)
-      setPlayers(prev => ({
-        ...prev,
-        attacker: prev.attacker+10,
-        hero: prev.healer+10,
-        healer: prev.hero+15,
-      }))
+    
+    if(totalAttack>=enemies[enemy]){
+      setKilled([...killed, getIndex(enemy)])
+      setNotification(prev => [...prev, `Players got chance move by killing a enemie`])
+      setChance(true)
+      setChanceCards(shuffle(chanceCards))
     }
     
     enemyAttack()
@@ -106,13 +87,13 @@ function App() {
         healer: prev.healer-parseInt(currentMoveCount),
       }))
       setNotification(prev => [...prev, `Enemies attacked with ${currentMoveCount}`])
-    },3000)
+    },2000)
     setCurrentMoveCount(prev => prev+1)
 
     setTimeout(() => {
       setIsPlayersTurn(true)
       setNotification(prev => [...prev, `Players turn`])
-    }, 5000)
+    }, 3000)
   }
 
   function shuffle(array) {
@@ -136,8 +117,8 @@ function App() {
   const handleChance = (n) => {
     setReveal(true)
 
-    setTimeout(() => setChance(false), 3000)
-    setTimeout(() => setReveal(false), 4000)
+    setTimeout(() => setChance(false), 1000)
+    setTimeout(() => setReveal(false), 2000)
 
     setTimeout(() => {
       setPlayers(prev => ({
@@ -147,9 +128,34 @@ function App() {
         healer: prev.healer+n,
       }))
       setNotification(prev => [...prev, `Players got ${n} from the chance move`])
-    }, 6000)
+    }, 3000)
   }
   
+  useEffect(() => {
+    if(killed.length===3){
+      setNotification(prev => [...prev, `Level 1 completed`])
+      setLevel(1)
+      setPlayers(prev => ({
+        ...prev,
+        attacker: prev.attacker+5,
+        hero: prev.healer+5,
+        healer: prev.hero+10,
+      }))
+      setNotification(prev => [...prev, `Attacker and healer gets 5 and hero gets 10`])
+    }
+    if(killed.length===5){
+      setNotification(prev => [...prev, `Level 2 completed`])
+      setLevel(2)
+      setPlayers(prev => ({
+        ...prev,
+        attacker: prev.attacker+10,
+        hero: prev.healer+10,
+        healer: prev.hero+15,
+      }))
+      setNotification(prev => [...prev, `Attacker and healer gets 10 and hero gets 15`])
+    }
+  }, [killed])
+
   return (
     <div className="App">
       <div className="current-count">
@@ -216,7 +222,7 @@ function App() {
       }
       <div className="flex">
         <div>
-          <div className="boss enemies">Boss - {enemies.boss}</div>
+          <div className="boss enemies">Boss [ {enemies.boss} ]</div>
           {
             (isPlayersTurn&&level===2&&killed.indexOf(5)===-1)&&
             <button onClick={()=>attack('boss')}>Attack It</button>
@@ -232,14 +238,14 @@ function App() {
           )
         }
         <div>
-          <div className="semi-boss enemies">Semi boss A - {enemies.semiBossA}</div>
+          <div className="semi-boss enemies">Semi boss A [ {enemies.semiBossA} ]</div>
           {
             (isPlayersTurn&&level===1&&killed.indexOf(3)===-1)&&
             <button onClick={()=>attack('semiBossA')}>Attack It</button>
           }
         </div>
         <div>
-          <div className="semi-boss enemies">Semi boss B - {enemies.semiBossB}</div>
+          <div className="semi-boss enemies">Semi boss B [ {enemies.semiBossB} ]</div>
           {
             (isPlayersTurn&&level===1&&killed.indexOf(4)===-1)&&
             <button onClick={()=>attack('semiBossB')}>Attack It</button>
@@ -255,21 +261,21 @@ function App() {
           )
         }
         <div>
-          <div className="minion enemies">Minion A - {enemies.minionsA}</div>
+          <div className="minion enemies">Minion A [ {enemies.minionsA} ]</div>
           {
             (isPlayersTurn&&level===0&&killed.indexOf(0)===-1)&&
             <button onClick={()=>attack('minionsA')}>Attack It</button>
           }
         </div>
         <div>
-          <div className="minion enemies">Minion B - {enemies.minionsB}</div>
+          <div className="minion enemies">Minion B [ {enemies.minionsB} ]</div>
           {
             (isPlayersTurn&&level===0&&killed.indexOf(1)===-1)&&
             <button onClick={()=>attack('minionsB')}>Attack It</button>
           }
         </div>
         <div>
-          <div className="minion enemies">Minion C - {enemies.minionsC}</div>
+          <div className="minion enemies">Minion C [ {enemies.minionsC} ]</div>
           {
             (isPlayersTurn&&level===0&&killed.indexOf(2)===-1)&&
             <button onClick={()=>attack('minionsC')}>Attack It</button>
@@ -293,7 +299,7 @@ function App() {
           }
         </div>
         <div>
-          <div className="hero player">Hero - [ {players.hero} ]</div>
+          <div className="hero player">Hero [ {players.hero} ]</div>
           {
             isPlayersTurn&&
             <input type="number" value={move.hero} name="hero" onChange={handleChange} />
@@ -306,8 +312,8 @@ function App() {
 
 export default App;
 
-const getIndex = (e) => {
-  switch (e) {
+const getIndex = (enm) => {
+  switch (enm) {
     case 'minionsA':
       return 0;
     case 'minionsB':

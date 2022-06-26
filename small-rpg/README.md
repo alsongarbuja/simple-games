@@ -20,7 +20,7 @@ The RPG is a simple rpg game based on a TRPG games (Turn based RPG). With only f
 3. In each move enemies will attack each of your player with the number of moves
     - *Say it is the 3rd move then all the players will get -3 damage*
     - *So, the late you do the more disadvantage for you*
-4. For each kill you get a random choice of `[20, 30, -10]` for every player
+4. For each kill you get a random choice of `[20, 10, -10]` for every player
 5. For first level finish each player will get `+5` and hero will get `+10` and for second level finish each player will get `+10` and hero will get `+15` 
 
 <br />

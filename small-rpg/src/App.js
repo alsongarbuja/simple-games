@@ -132,14 +132,15 @@ function App() {
   }
   
   useEffect(() => {
+    console.log('test hai');
     if(killed.length===3){
       setNotification(prev => [...prev, `Level 1 completed`])
       setLevel(1)
       setPlayers(prev => ({
         ...prev,
         attacker: prev.attacker+5,
-        hero: prev.healer+5,
-        healer: prev.hero+10,
+        healer: prev.healer+5,
+        hero: prev.hero+10,
       }))
       setNotification(prev => [...prev, `Attacker and healer gets 5 and hero gets 10`])
     }
@@ -149,8 +150,8 @@ function App() {
       setPlayers(prev => ({
         ...prev,
         attacker: prev.attacker+10,
-        hero: prev.healer+10,
-        healer: prev.hero+15,
+        healer: prev.healer+10,
+        hero: prev.hero+15,
       }))
       setNotification(prev => [...prev, `Attacker and healer gets 10 and hero gets 15`])
     }

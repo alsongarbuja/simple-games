@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+/* Semantic tags */
+main {
+    height: 100vh;
+}
+article {
+    border-right: 1px solid #000;
+    padding: 2em 1em;
+}
+
+article div {
+    margin-block: 2em;
+}
+
+/* Utitlity classes */
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 4fr;
+}
+.blocks {
+    box-shadow: 1px 3px 5px rgb(181, 181, 181);
+    padding: .5em 1em;
+    position: relative;
+    cursor: move;
+}
+.connector-up, .connector-down {
+    position: absolute;
+    background-color: #fff;
+    width: 20px;
+    height: 8px;
+}
+.connector-up {
+    top: 0;
+    left: 5px;
+}
+.connector-down {
+    bottom: -6px;
+    left: 5px;
+    background-color: plum;
+    height: 10px;
+}
+
+/* blocks */
+.single-blocks {
+    background-color: plum;
+}
+.loop-block {
+    background-color: green;
+    color: #fff;
+}
+.statement-blocks {
+    background-color: skyblue;
+}
+
+.single-turn--blocks select {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.51);
+    width: 60%;
+    border: none;
+    border-radius: 2px;
+    padding: .5em 1em;
+    margin-inline-start: 1em;
+}

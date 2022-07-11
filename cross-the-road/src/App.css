@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+  background-color: rgb(81, 138, 217);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.background-container {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.game-container {
+  height: 90vw;
+  width: 70vh;
+  transform: rotate(90deg);
+  position: relative;
+  overflow: hidden;
+}
+.car-container {
+  width: 30%;
+  height: 30%;
+  transform: rotate(-90deg);
+  position: absolute;
+}
+.character {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  position: absolute;
+}

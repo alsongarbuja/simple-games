@@ -14,6 +14,8 @@ function App() {
     attacker: 10,
     healer: 50,
     hero: 20,
+    name: [],
+    nameSet: false,
   })
   const [move, setMove] = useState({
     attacker: 0,
@@ -27,6 +29,13 @@ function App() {
   const [isPlayersTurn, setIsPlayersTurn] = useState(true)
   const [level, setLevel] = useState(0)
   const [killed, setKilled] = useState([])
+
+  const [highScore, setHighScore] = useState({
+    attacker: 0,
+    healer: 0,
+    hero: 0,
+    winner: ''
+  })
 
   const handleChange = (e) => setMove(prev => ({...prev, [e.target.name]: e.target.value}))
 
@@ -52,12 +61,16 @@ function App() {
     
     if(totalAttack>=enemies[enemy]){
       setKilled([...killed, getIndex(enemy)])
-      setNotification(prev => [...prev, `Players got chance move by killing a enemie`])
-      setChance(true)
-      setChanceCards(shuffle(chanceCards))
+      if(enemy!=='boss'){
+        setNotification(prev => [...prev, `Players got chance move by killing a enemie`])
+        setChance(true)
+        setChanceCards(shuffle(chanceCards))
+      }
     }
     
-    enemyAttack()
+    if(totalAttack>=enemies[enemy]&&enemy!=='boss'){
+      enemyAttack()
+    }
   }
 
   const heal = () => {
@@ -157,11 +170,62 @@ function App() {
     }
   }, [killed])
 
+  useEffect(() => {
+    const hs = localStorage.getItem('small-rpg--highscore')
+    if(hs){
+      const h = JSON.parse(hs)
+      setHighScore(h);
+    }
+  }, [])
+
+  useEffect(() => {
+    if(enemies.boss<=0){
+      let highscorePoints = 0;
+      if(highScore.attacker<players.attacker){
+        highscorePoints++;
+        setHighScore(prev => ({...prev, attacker: players.attacker}))
+      }
+      if(players.healer>highScore.healer){
+        highscorePoints++;
+        setHighScore(prev => ({...prev, healer: players.healer}))
+      }
+      if(players.hero>highScore.hero){
+        highscorePoints++;
+        setHighScore(prev => ({...prev, hero: players.hero}))
+      }
+  
+      if(highscorePoints>=2){
+        setHighScore(prev => ({...prev, winner: `${players.name.join(" & ")}`}))
+        localStorage.setItem("small-rpg--highscore", JSON.stringify(highScore))
+      }
+    }
+  // eslint-disable-next-line
+  }, [enemies.boss])
+
   return (
     <div className="App">
+      {
+        !players.nameSet&&(
+          <>
+            <div className="bg-big" />
+            <div className="modal">
+              <h1>Add Player names</h1>
+              <input type="text" placeholder="Seprate players name with comma" value={players.name.join(",")} onChange={(e)=>setPlayers(prev => ({...prev, name: e.target.value.split(",")}))} />
+              <button onClick={()=>setPlayers(prev => ({...prev, nameSet: true}))}>Set Name</button>
+            </div>
+          </>
+        )
+      }
       <div className="current-count">
         Current Move Count:
         {currentMoveCount}
+      </div>
+      <div className="high-score">
+        <h1>High Score</h1>
+        <h4>By {highScore.winner}</h4>
+        <p><b>Attacker: </b>{highScore.attacker}</p>
+        <p><b>Healer: </b>{highScore.healer}</p>
+        <p><b>Hero: </b>{highScore.hero}</p>
       </div>
       <div className="notification">
         {

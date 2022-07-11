@@ -23,6 +23,13 @@ code {
   font-size: 2rem;
   z-index: 3;
 }
+.high-score {
+  position: fixed;
+  padding: 1em;
+  border: 2px solid black;
+  z-index: 3;
+  bottom: 20px;
+}
 .notification {
   position: fixed;
   right: 20px;

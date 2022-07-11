@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockly</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="grid">
+        <article></article>
+        <article class="blocks-wrapper">
+            <div draggable="true">
+                <div class="blocks single-blocks">
+                    Move Forward
+                    <span class="connector-up"></span>
+                    <span class="connector-down"></span>
+                </div>
+            </div>
+            <div draggable="true">
+                <div class="blocks single-blocks single-turn--blocks">
+                    Turn 
+                    <select name="" id="">
+                        <option value="left">left</option>
+                        <option value="right">right</option>
+                    </select>
+                    <span class="connector-up"></span>
+                    <span class="connector-down"></span>
+                </div>
+            </div>
+            <div draggable="true">
+                <div class="blocks single-blocks single-turn--blocks">
+                    Turn
+                    <select name="" id="">
+                        <option value="right">right</option>
+                        <option value="left">left</option>
+                    </select>
+                    <span class="connector-up"></span>
+                    <span class="connector-down"></span>
+                </div>
+            </div>
+            <div draggable="true">
+                <div class="blocks loop-block">
+                    Repeat Until
+    
+                    do
+                    <span class="connector-up"></span>
+                    <span class="connector-down" style="background-color: green;"></span>
+                </div>
+            </div>
+            <div draggable="true">
+                <div class="blocks statement-blocks if-block">
+                    If 
+    
+                    do
+                    <span class="connector-up"></span>
+                    <span class="connector-down" style="background-color: skyblue;"></span>
+                </div>
+            </div>
+            <div draggable="true">
+                <div class="blocks statement-blocks if-else--block">
+                    If
+    
+                    do
+    
+                    else
+                    <span class="connector-up"></span>
+                    <span class="connector-down" style="background-color: skyblue;"></span>
+                </div>
+            </div>
+        </article>
+        <article class="playground"></article>
+    </main>
+
+    <script src="./blocks.js"></script>
+    <script src="./action.js"></script>
+</body>
+</html>

@@ -1,82 +1,75 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { arrowKeyPressedHandler } from './logic/keyHandler';
 
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInAnonymously } from "firebase/auth";
-import { getDatabase, onDisconnect, onValue, onChildAdded, ref, set } from "firebase/database";
+import { getDatabase, 
+  onDisconnect, onValue, 
+  onChildAdded, ref, set, 
+  onChildRemoved, remove, update
+} from "firebase/database";
 import { getRandomColor, getRandomName } from './helpers/random';
 
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { FaArrowUp, FaArrowDown, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAMInaiJEDHmQyGB4iZ_45VCQEpEQY-ATY",
-  authDomain: "cross-road-d7e8e.firebaseapp.com",
-  projectId: "cross-road-d7e8e",
-  storageBucket: "cross-road-d7e8e.appspot.com",
-  messagingSenderId: "960936549572",
-  appId: "1:960936549572:web:ef9605351ed39afe723d91",
-  measurementId: "G-04FQRMRFXB",
-  databaseURL: "https://cross-road-d7e8e-default-rtdb.asia-southeast1.firebasedatabase.app",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_PROJECT_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const database = getDatabase(app);
-
 function App() {
-  const [players, setPlayers] = useState([]);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+
+  const [players, setPlayers] = useState({});
+  const [playerId, setPlayerId] = useState('');
+  const [playersRef] = useState(ref(database, 'players'));
 
   const initGame = () => {
-    // onValue(players, (snapshot) => {
-    //   const players = snapshot.val();
-    //   if (players) {
-    //     setPlayers(players);
-    //   }
-    // })
+    onValue(playersRef, (snapshot) => {
+      setPlayers(snapshot.val());
+    })
 
-    onChildAdded(ref(database, 'players'), (snapshot) => {
+    onChildAdded(playersRef, (snapshot) => {
       const player = snapshot.val();
-      let isYou = false;
-      if (player.id === auth.currentUser.uid) {
-        isYou = true;
-      }
-      setPlayers(prev => ([
+      setPlayers(prev => ({
         ...prev,
-        { [snapshot.key]: {
+        [snapshot.key]: {
           ...player,
-          isYou,
-        } },
-      ]));
+        },
+     }));
+    })
+
+    onChildRemoved(playersRef, (snapshot) => {
+      remove(playersRef, snapshot.key);
+      const newPlayers = delete players[snapshot.key];
+      setPlayers(newPlayers);
     })
   }
 
   useEffect(() => {
-    const arrowHandler = document.addEventListener('keydown', arrowKeyPressedHandler);
-
-    let playerId;
-    let playerRef;
-
     auth.onAuthStateChanged(user => {
       if(user){
-        console.log(user);
-        playerId = user.uid;
-        playerRef = ref(database, `players/${playerId}`);
-
+        setPlayerId(user.uid);
+        
         const name = getRandomName()
 
-        set(ref(database, `players/${playerId}`), {
-          id: playerId,
+        set(ref(database, `players/${user.uid}`), {
+          id: user.uid,
           name,
           right: '10px',
-          bottom: '20px',
+          bottom: Math.floor(Math.random()*(600 - 280+1) + 280)+'px',
           color: getRandomColor(),
         })
 
-        onDisconnect(ref(database, `players/${playerId}`)).remove();
+        onDisconnect(ref(database, `players/${user.uid}`)).remove();
 
         initGame()
       }else{
@@ -85,11 +78,52 @@ function App() {
     })
 
     signInAnonymously(auth).catch(err => console.log(err))
-
-    return () => {
-      document.removeEventListener('keydown', arrowHandler);
-    }
+  // eslint-disable-next-line
   }, []);
+
+  const handleTopArrow = () => {
+    const character = document.querySelector('.you');
+    const characterRight = parseInt(window.getComputedStyle(character).right);
+    const newPlayer = players[playerId];
+
+    character.style.right = `${characterRight + 30}px`;
+    newPlayer.right = `${characterRight + 30}px`;
+
+    update(ref(database, `players/${playerId}`), newPlayer);
+  }
+
+  const handleBottomArrow = () => {
+    const character = document.querySelector('.you');
+    const characterRight = parseInt(window.getComputedStyle(character).right);
+    const newPlayer = players[playerId];
+
+    character.style.right = `${characterRight - 30}px`;
+    newPlayer.right = `${characterRight - 30}px`;
+    
+    set(ref(database, `players/${playerId}`), newPlayer);
+  }
+
+  const handleLeftArrow = () => {
+    const character = document.querySelector('.you');
+    const characterTop = parseInt(window.getComputedStyle(character).top);
+    const newPlayer = players[playerId];
+
+    character.style.top = `${characterTop + 30}px`;
+    newPlayer.bottom = `${characterTop + 30}px`;
+
+    set(ref(database, `players/${playerId}`), newPlayer);
+  }
+
+  const handleRightArrow = () => {
+    const character = document.querySelector('.you');
+    const characterTop = parseInt(window.getComputedStyle(character).top);
+    const newPlayer = players[playerId];
+
+    character.style.top = `${characterTop - 30}px`;
+    newPlayer.bottom = `${characterTop - 30}px`;
+
+    set(ref(database, `players/${playerId}`), newPlayer);
+  }
 
   return (
     <div className="App">
@@ -111,11 +145,10 @@ function App() {
         }}>
         </div>
         {
-          players.map((player, index) => {
-            const { id, name, right, bottom, color } = player[Object.keys(player)[0]];
-            console.log(id, name, right, color);
+          Object.keys(players).map((player) => {
+            const { id, name, right, bottom, color } = players[player];
             return (
-              <div className="character" key={index} style={{
+              <div className={`character ${playerId===player&&'you'}`} key={id} style={{
                 backgroundColor: ""+color,
                 right,
                 bottom,
@@ -125,6 +158,28 @@ function App() {
             )
           })
         }
+      </div>
+      <div className="controller">
+        <div className="front">
+          <button onClick={handleTopArrow}>
+            <FaArrowUp />
+          </button>
+        </div>
+        <div className="left">
+          <button onClick={handleLeftArrow}>
+            <FaArrowLeft />
+          </button>
+        </div>
+        <div className="back">
+          <button onClick={handleBottomArrow}>
+            <FaArrowDown />
+          </button>
+        </div>
+        <div className="right">
+          <button onClick={handleRightArrow}>
+            <FaArrowRight />
+          </button>
+        </div>
       </div>
     </div>
   );

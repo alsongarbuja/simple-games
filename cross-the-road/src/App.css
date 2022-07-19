@@ -12,11 +12,12 @@
   background-size: contain;
 }
 .game-container {
-  height: 90vw;
-  width: 70vh;
+  height: 60vw;
+  width: 75vh;
   transform: rotate(90deg);
   position: relative;
   overflow: hidden;
+  background-size: cover;
 }
 .car-container {
   width: 30%;

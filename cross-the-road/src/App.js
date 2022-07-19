@@ -82,47 +82,55 @@ function App() {
   }, []);
 
   const handleTopArrow = () => {
-    const character = document.querySelector('.you');
-    const characterRight = parseInt(window.getComputedStyle(character).right);
-    const newPlayer = players[playerId];
+    if(parseInt(window.getComputedStyle(document.querySelector('.you')).right) < 490){
+      const character = document.querySelector('.you');
+      const characterRight = parseInt(window.getComputedStyle(character).right);
+      const newPlayer = players[playerId];
 
-    character.style.right = `${characterRight + 30}px`;
-    newPlayer.right = `${characterRight + 30}px`;
+      character.style.right = `${characterRight + 30}px`;
+      newPlayer.right = `${characterRight + 30}px`;
 
-    update(ref(database, `players/${playerId}`), newPlayer);
+      update(ref(database, `players/${playerId}`), newPlayer);
+    }
   }
 
   const handleBottomArrow = () => {
-    const character = document.querySelector('.you');
-    const characterRight = parseInt(window.getComputedStyle(character).right);
-    const newPlayer = players[playerId];
-
-    character.style.right = `${characterRight - 30}px`;
-    newPlayer.right = `${characterRight - 30}px`;
-    
-    set(ref(database, `players/${playerId}`), newPlayer);
+    if(parseInt(window.getComputedStyle(document.querySelector('.you')).right) > 10){
+      const character = document.querySelector('.you');
+      const characterRight = parseInt(window.getComputedStyle(character).right);
+      const newPlayer = players[playerId];
+  
+      character.style.right = `${characterRight - 30}px`;
+      newPlayer.right = `${characterRight - 30}px`;
+      
+      set(ref(database, `players/${playerId}`), newPlayer);
+    }
   }
 
   const handleLeftArrow = () => {
     const character = document.querySelector('.you');
-    const characterTop = parseInt(window.getComputedStyle(character).top);
-    const newPlayer = players[playerId];
-
-    character.style.top = `${characterTop + 30}px`;
-    newPlayer.bottom = `${characterTop + 30}px`;
-
-    set(ref(database, `players/${playerId}`), newPlayer);
+    if(parseInt(window.getComputedStyle(character).top) < 865){
+      const characterTop = parseInt(window.getComputedStyle(character).top);
+      const newPlayer = players[playerId];
+  
+      character.style.top = `${characterTop + 30}px`;
+      newPlayer.bottom = `${characterTop + 30}px`;
+  
+      set(ref(database, `players/${playerId}`), newPlayer);
+    }
   }
 
   const handleRightArrow = () => {
     const character = document.querySelector('.you');
-    const characterTop = parseInt(window.getComputedStyle(character).top);
-    const newPlayer = players[playerId];
+    if(parseInt(window.getComputedStyle(character).top) > 20){
+      const characterTop = parseInt(window.getComputedStyle(character).top);
+      const newPlayer = players[playerId];
 
-    character.style.top = `${characterTop - 30}px`;
-    newPlayer.bottom = `${characterTop - 30}px`;
+      character.style.top = `${characterTop - 30}px`;
+      newPlayer.bottom = `${characterTop - 30}px`;
 
-    set(ref(database, `players/${playerId}`), newPlayer);
+      set(ref(database, `players/${playerId}`), newPlayer);
+    }
   }
 
   return (
@@ -151,7 +159,7 @@ function App() {
               <div className={`character ${playerId===player&&'you'}`} key={id} style={{
                 backgroundColor: ""+color,
                 right,
-                bottom,
+                top: bottom,
               }}>
                 <div className="character-name">{name}</div>
               </div>
